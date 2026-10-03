@@ -1,14 +1,24 @@
-import { Search, ShoppingBag, Heart, User, Menu, X } from "lucide-react";
+import { Search, ShoppingBag, Heart, Menu, X } from "lucide-react";
 import { useState } from "react";
+import GoogleAuth from "./GoogleAuth";
 
 type Props = {
   search: string;
   setSearch: (v: string) => void;
   cartCount: number;
   wishlistCount: number;
+  onOpenCart: () => void;
+  onOpenWishlist: () => void;
 };
 
-export default function Header({ search, setSearch, cartCount, wishlistCount }: Props) {
+export default function Header({
+  search,
+  setSearch,
+  cartCount,
+  wishlistCount,
+  onOpenCart,
+  onOpenWishlist,
+}: Props) {
   const [open, setOpen] = useState(false);
 
   return (
@@ -84,15 +94,42 @@ export default function Header({ search, setSearch, cartCount, wishlistCount }: 
               }}
             />
           </div>
-          <User size={17} />
-          <div style={{ position: "relative" }}>
+
+          <GoogleAuth />
+
+          {/* Wishlist button */}
+          <button
+            onClick={onOpenWishlist}
+            aria-label="Open wishlist"
+            style={{
+              position: "relative",
+              background: "none",
+              border: "none",
+              color: "#fff",
+              padding: 4,
+              cursor: "pointer",
+            }}
+          >
             <Heart size={17} />
             {wishlistCount > 0 && <Badge n={wishlistCount} />}
-          </div>
-          <div style={{ position: "relative" }}>
+          </button>
+
+          {/* Cart button */}
+          <button
+            onClick={onOpenCart}
+            aria-label="Open cart"
+            style={{
+              position: "relative",
+              background: "none",
+              border: "none",
+              color: "#fff",
+              padding: 4,
+              cursor: "pointer",
+            }}
+          >
             <ShoppingBag size={17} />
             {cartCount > 0 && <Badge n={cartCount} />}
-          </div>
+          </button>
         </div>
       </header>
     </>

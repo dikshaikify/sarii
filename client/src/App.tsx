@@ -1,16 +1,16 @@
 import { useEffect, useMemo, useState } from "react";
 import Header from "./components/Header";
-import Hero from "./components/Hero";
+import HeroCarousel from "./components/HeroCarousel";
 import CategoryTiles from "./components/CategoryTiles";
 import StoryBanner from "./components/StoryBanner";
 import ProductGrid from "./components/ProductGrid";
 import Newsletter from "./components/Newsletter";
 import Footer from "./components/Footer";
 import CartBar from "./components/CartBar";
+import CartDrawer from "./components/CartDrawer";
+import WishlistDrawer from "./components/WishlistDrawer";
 import type { Saree, Meta } from "./types";
 
-// Dev: Vite proxies /api → localhost:5000 (see vite.config.ts)
-// Prod: VITE_API_URL is set in Vercel dashboard to your Render URL
 const API = import.meta.env.VITE_API_URL || "";
 
 export default function App() {
@@ -26,6 +26,10 @@ export default function App() {
 
   const [cart, setCart] = useState<Saree[]>([]);
   const [wishlist, setWishlist] = useState<number[]>([]);
+
+  // Drawer open/close state
+  const [cartOpen, setCartOpen] = useState(false);
+  const [wishlistOpen, setWishlistOpen] = useState(false);
 
   useEffect(() => {
     fetch(`${API}/api/meta`)
@@ -60,9 +64,18 @@ export default function App() {
 
   const addToCart = (s: Saree) => setCart(c => [...c, s]);
 
+  const removeFromCart = (id: number) =>
+    setCart(c => c.filter(x => x.id !== id));
+
   const clearFilters = () => {
     setCategory(""); setFabric(""); setOccasion(""); setSort(""); setSearch("");
   };
+
+  // Derived: get wishlist Saree objects
+  const wishlistItems = useMemo(
+    () => sarees.filter(s => wishlist.includes(s.id)),
+    [sarees, wishlist]
+  );
 
   return (
     <div style={{ minHeight: "100vh", background: "#fdf8f3" }}>
@@ -71,8 +84,10 @@ export default function App() {
         setSearch={setSearch}
         cartCount={cart.length}
         wishlistCount={wishlist.length}
+        onOpenCart={() => setCartOpen(true)}
+        onOpenWishlist={() => setWishlistOpen(true)}
       />
-      <Hero />
+      <HeroCarousel />
       <CategoryTiles
         onSelect={(c) => {
           setCategory(c);
@@ -95,13 +110,31 @@ export default function App() {
       />
       <Newsletter />
       <Footer />
-      {cart.length > 0 && (
+
+      {cart.length > 0 && !cartOpen && (
         <CartBar
           count={cart.length}
           total={cartTotal}
           onClear={() => setCart([])}
         />
       )}
+
+      {/* Drawers */}
+      <CartDrawer
+        open={cartOpen}
+        onClose={() => setCartOpen(false)}
+        items={cart}
+        onRemove={removeFromCart}
+        onClear={() => setCart([])}
+      />
+
+      <WishlistDrawer
+        open={wishlistOpen}
+        onClose={() => setWishlistOpen(false)}
+        items={wishlistItems}
+        onRemove={toggleWishlist}
+        onAddToCart={addToCart}
+      />
     </div>
   );
 }

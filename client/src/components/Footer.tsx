@@ -1,3 +1,5 @@
+import { Mail, Phone, MapPin } from "lucide-react";
+
 export default function Footer() {
   const cols = [
     { t: "Shop",   l: ["New Arrivals", "Sarees", "Collections", "Festive Edit"] },
@@ -17,10 +19,20 @@ export default function Footer() {
           <h4 className="serif" style={{ fontSize: 22, letterSpacing: 6, marginBottom: 12 }}>
             SĀRI
           </h4>
-          <p style={{ fontSize: 12, opacity: 0.6, lineHeight: 1.7, maxWidth: 280 }}>
+          <p style={{ fontSize: 12, opacity: 0.6, lineHeight: 1.7, maxWidth: 280, marginBottom: 20 }}>
             Indian sarees, thoughtfully curated for the modern wardrobe.
           </p>
+
+          <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
+            <ContactRow icon={<Mail size={13} />} text="dikshakoppad@gmail.com" />
+            <ContactRow icon={<Phone size={13} />} text="+91 80889 33427" />
+            <ContactRow
+              icon={<MapPin size={13} />}
+              text="Shivapur Badavane, Byadgi, Dist: Haveri, Karnataka 581106"
+            />
+          </div>
         </div>
+
         {cols.map(col => (
           <div key={col.t}>
             <p style={{
@@ -45,5 +57,14 @@ export default function Footer() {
         © 2026 SĀRI. All rights reserved.
       </div>
     </footer>
+  );
+}
+
+function ContactRow({ icon, text }: { icon: React.ReactNode; text: string }) {
+  return (
+    <div style={{ display: "flex", gap: 10, alignItems: "flex-start" }}>
+      <div style={{ color: "#e8b96a", paddingTop: 2, flexShrink: 0 }}>{icon}</div>
+      <span style={{ fontSize: 12, opacity: 0.75, lineHeight: 1.5 }}>{text}</span>
+    </div>
   );
 }
