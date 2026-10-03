@@ -1,29 +1,30 @@
-﻿# Global — applies to all subfolders
-
+﻿# Dependencies
 node_modules/
-dist/
-build/
+**/node_modules/
 
-# Environment files
+# Secrets — NEVER commit
 .env
 .env.local
-.env.*.local
-.env.production
+**/.env
+**/.env.local
+
+# Builds
+dist/
+build/
+**/dist/
+**/build/
 
 # Logs
 *.log
-logs/
+npm-debug.log*
 
-# Editor
-.vscode/
-.idea/
+# OS
 .DS_Store
 Thumbs.db
 
-# Deployment
+# Vercel
 .vercel/
-.render/
 
-# Optional
-*.bak
-*.tmp
+# IDE
+.vscode/
+.idea/
